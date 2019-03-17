@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition>
+        <p:dialog width="800" modal="true" position="top"  widgetVar="listaProductos" showHeader="true" header="Agregar Productos" resizable="false">
+            <h:form id="ventanaListaProductos">
+                <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
+                    <p:inputText value="#{listarProductosAgregar.nombreProducto}"  style="width:500px; font-size: 13pt; " placeholder="Buscar nombre del producto">
+                        
+                        <p:ajax event="keyup" update="tablaProducto" listener="#{listarProductosAgregar.buscarPorNombreProducto}" />
+                    </p:inputText>
+                </div>                
+                <p:messages closable="true"/>
+                <p:dataTable id="tablaProducto"  style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;"
+                               value="#{listarProductosAgregar.productos}" var="producto"
+                               paginator="true"  rows="20" scrollable="true" scrollHeight="500" paginatorPosition="bottom"
+                         >
+                     <p:column style="text-align: center;" headerText="Imagen">
+                         <p:graphicImage style="width: 30px;text-align: center; font-size: 12pt;" value="/faces/resources/imagenes/#{producto.prodimagen}"/>
+                     </p:column>
+                      <p:column headerText="Nombre">
+                         #{producto.prodnombre}
+                     </p:column>
+                      <p:column headerText="Descripción">
+                         #{producto.proddescripcion}
+                     </p:column>
+                     <p:column headerText="Precio">
+                         #{producto.prodprecio}
+                     </p:column>
+                     <p:column style="text-align: center;" headerText="Acción">
+                         <p:commandLink actionListener="#{pedidoDetallesController.agregarProducto(producto)}"
+                                        onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"
+                                        update=":ventanaListaProductos"
+                                        
+                                        >Agregar</p:commandLink>
+                     </p:column>
+                 
+                 </p:dataTable>
+            </h:form>       
+        </p:dialog>
+    </ui:composition>
+    
+</html>
+

@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="/plantillas/frontEnd.xhtml">
+
+            <ui:define name="itemsMenu">
+                <h:link outcome="/faces/pedidosnuevos/pedidosnuevos" style="text-decoration: none; color: #000000;">
+                    <div class="itemsMenu">
+                        Nuevos Pedidos
+                    </div>
+                </h:link>
+                <h:link outcome="/faces/pedidosconfirmados/pedidosconfirmados"  style="text-decoration: none; color: #000000;">
+                    <div class="itemsMenu">
+                        Pedidos Confirmados
+                    </div>
+                </h:link>
+
+                <h:link outcome="/faces/pedidosdespachados/pedidosdespachados"  style="text-decoration: none; color: #000000;">
+                    <div class="itemsMenu">
+                        Pedidos Despachados
+                    </div>
+                </h:link>
+
+                <h:link  outcome="/faces/pedidoscancelados/pedidoscancelados" style="text-decoration: none; color: #000000;">
+                    <div class="itemsMenuSeleccinado">
+                        Pedidos Cancelados
+                    </div>
+                </h:link>
+            </ui:define>
+
+            <ui:define name="content">    
+                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
+                <h:form>
+                    <p:breadCrumb>
+                        <p:menuitem value="pedidos Cancelados" outcome="/faces/pedidoscancelados/pedidoscancelados" /> 
+                        <p:menuitem value="pedido Cancelado" outcome="/faces/pedidoscancelados/pedidocancelado" />  
+                    </p:breadCrumb>                    
+                </h:form> 
+                <div id="tituloContenido">Pedido Cancelado</div>
+                <div id="cuadroDatosPedido">
+                    <h:form id="formularioDatosPedido">
+                        <p:messages closable="true"/>
+                        <p:panelGrid style="text-align:left;" styleClass="panelgrid"> 
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Domicilio:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.domicilioFormater}"/>
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Fecha:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.fechaFormatiada}"/>
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Hora:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.horaFormatiada}"/>
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Cliente:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.pedidoSelected.usuarionombre}"/>
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Dirección:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.pedidoSelected.direccion}"/>
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Teléfono:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.pedidoSelected.telefono}"/>
+                                </p:column>                                
+                            </p:row>                            
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Forma de Pago:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.formaDePagoFormater}"/>
+                                </p:column>                                
+                            </p:row>
+                            <p:row>
+                                <p:column >
+                                    <p:outputLabel style="font-size: 15pt;" value="Observaciones:"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel style="font-size: 15pt;" value="#{pedidoCanceladoDetallesController.pedidoSelected.observaciones}"/>
+                                </p:column>                                
+                            </p:row>                             
+                        </p:panelGrid>                         
+                    </h:form>
+                </div>
+                <div id="totalPedido">
+                    <h:form id="formularioTotalPedido">                        
+                        <p:outputLabel value="Total Pedido: $#{pedidoCanceladoDetallesController.totalPedido}"/>
+                    </h:form>
+                    
+                </div>
+                <div style="clear: both;">
+
+                </div>
+                <div id="cuadroAcciones">
+                    <h:form>
+                        <div id="botonImprimirRecibo">
+                            <p:commandLink ajax="false" target="_blank" action="#{pedidoCanceladoDetallesController.generarPdf()}" style="text-decoration: none">
+                                    <p:graphicImage style="width: 60px;" value="/faces/resources/imagenesAplicacion/generarRecibo.png"/>
+                                    Generar Recibo
+                            </p:commandLink>
+                         </div>                        
+                        <div style="clear: both;"></div>
+                    </h:form>
+
+                </div>
+                <div id="tituloDetalles">Detalles Pedido</div>
+                <div id="cuadroItems">
+                    <h:form id="tablaItemsPedido">                        
+                        <p:dataTable  style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;" value="#{pedidoCanceladoDetallesController.itemsPedido}" var="itempedido" 
+                                      >
+
+                            <p:column headerText="Imagen">
+                                <p:graphicImage style="width: 70px;text-align: center; font-size: 12pt;" value="/faces/resources/imagenes/#{itempedido.idproducto.prodimagen}"/>
+                            </p:column>
+                            <p:column style="text-align: center; font-size: 12pt;" headerText="Nombre Producto">
+                           #{itempedido.idproducto.prodnombrefactura}
+                            </p:column>
+                            <p:column style="text-align: center; font-size: 12pt;" headerText="Cantidad" >
+                          #{itempedido.cantidad}
+                            </p:column>
+                            <p:column style="text-align: center; font-size: 12pt;" headerText="Precio">
+                         #{pedidoCanceladoDetallesController.getPrecioFormatiado(itempedido.precio)}
+                            </p:column>
+                            <p:column style="text-align: center; font-size: 12pt;" headerText="Total" >
+                            #{pedidoCanceladoDetallesController.getPrecioFormatiado(itempedido.cantidad * itempedido.precio)}
+                            </p:column>                            
+                        </p:dataTable>
+                    </h:form>                    
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

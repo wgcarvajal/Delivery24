@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:composition>
+        <p:dialog modal="true"  widgetVar="toasNoEliminarItem" showHeader="true" header="Error" resizable="false">
+            <h:form id="ventanaToasNoEliminarItem">                
+                <p:panelGrid class="panelgrid">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel style="color: red;font-size: 15pt;" value="El pedido debe tener al menos un Producto."/>
+                        </p:column>                        
+                    </p:row>
+                     <p:row>
+                         <p:column  style="text-align: center">
+                             <p:commandButton value="Aceptar" actionListener="#{pedidoConfirmadoDetallesController.aceptarMensajeToasNoEliminarProducto()}" />                             
+                        </p:column>                      
+                    </p:row>
+                </p:panelGrid>
+            </h:form>       
+        </p:dialog>
+    </ui:composition>
+    
+</html>

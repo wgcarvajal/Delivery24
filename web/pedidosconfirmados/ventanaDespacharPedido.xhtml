@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition>
+        <p:dialog modal="true"  widgetVar="despacharPedido" closable="false" showHeader="true" header="Despachar Pedido" resizable="false">
+            <h:form id="ventanaDespacharPedido"> 
+                <p:messages closable="true"/>
+                <p:panelGrid class="panelgrid">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel style="font-size: 15pt;" value="Despachar el Pedido?."/>
+                        </p:column>         
+                    </p:row>
+                     <p:row>
+                         <p:column  style="text-align: center">
+                             <p:commandButton value="Aceptar"
+                                              actionListener="#{pedidoConfirmadoDetallesController.aceptarDespacharPedido()}" 
+                                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"/>
+                             <p:commandButton value="Cancelar" style="margin-left: 20px;"
+                                              actionListener="#{pedidoConfirmadoDetallesController.cancelarDespacharPedido()}" 
+                                             />
+                        </p:column>                      
+                    </p:row>
+                </p:panelGrid>
+            </h:form>       
+        </p:dialog>
+    </ui:composition>
+    
+</html>
+
+

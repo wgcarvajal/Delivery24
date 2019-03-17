@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="/plantillas/frontEnd.xhtml">
+            
+            <ui:define name="itemsMenu">                
+                    
+                <h:link outcome="/faces/pedidosnuevos/pedidosnuevos" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Nuevos Pedidos
+                    </div>
+                </h:link>
+                <h:link outcome="/faces/pedidosconfirmados/pedidosconfirmados" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Pedidos Confirmados
+                    </div>
+                </h:link>
+                
+                <h:link outcome="/faces/pedidosdespachados/pedidosdespachados"  style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenuSeleccinado">
+                        Pedidos Despachados
+                    </div>
+                </h:link>
+                
+                <h:link  outcome="/faces/pedidoscancelados/pedidoscancelados" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Pedidos Cancelados
+                    </div>
+                </h:link>
+                
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form>
+                    <p:breadCrumb>
+                        <p:menuitem value="pedidos despachados" outcome="/faces/pedidosdespachados/pedidosdespachados" />                           
+                    </p:breadCrumb>
+                </h:form> 
+                <div id="tituloContenido">Pedidos Despachados</div>
+                <p:dataTable style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;" value="#{pedidoDespachadoController.items}" var="pedido" 
+                             paginator="true"
+                             rows="10"
+                             >
+                        
+                    <p:column headerText="Fecha">
+                           #{pedido.fecha}
+                    </p:column>
+                    <p:column headerText="Nombre Cliente">
+                           #{pedido.usuarionombre}
+                    </p:column>
+                    <p:column headerText="Dirección" >
+                         #{pedido.direccion}
+                    </p:column>
+                    <p:column headerText="Teléfono">
+                        #{pedido.telefono}
+                    </p:column>
+                    <p:column style="text-align: center" headerText="Forma Pago" >
+                        <h:outputLabel value="Tarjeta" rendered="#{pedido.formapago == 'tc'}"/> 
+                        <h:outputLabel value="Efectivo" rendered="#{pedido.formapago == 'ef'}"/> 
+                    </p:column>
+                    
+                     <p:column headerText="Acciones">
+                         <p:commandLink action="#{pedidoDespachadoDetallesController.seleccionarPedido(pedido)}"> <p:graphicImage style="width: 30px;" value="/faces/resources/imagenesAplicacion/lupa.png"/></p:commandLink>
+                    </p:column>
+                        
+               </p:dataTable>
+                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
+            </ui:define>
+            
+
+        </ui:composition>
+        
+    </body>
+</html>

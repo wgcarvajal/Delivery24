@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="/plantillas/frontEnd.xhtml">
+
+            <ui:define name="itemsMenu">
+                 <h:link outcome="/faces/productos/productos" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenuSeleccinado">
+                        Lista de  productos
+                    </div>
+                </h:link>
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form>
+                    <p:breadCrumb>
+                        <p:menuitem value="Lista de productos" outcome="/faces/productos/productos" />                           
+                    </p:breadCrumb>
+                </h:form> 
+                <div id="tituloContenido">Lista de Productos</div>
+                
+                <p:dataTable style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;" value="#{productosController.productos}" var="producto" 
+                             paginator="true"
+                             rows="10"
+                             >
+                        
+                    <p:column headerText="Imagen">
+                        <p:graphicImage style="width: 60px;" value="/faces/resources/imagenes/#{producto.prodimagen}"/>
+                    </p:column>
+                    <p:column headerText="Nombre">
+                          #{producto.prodnombre}
+                    </p:column>
+                    <p:column headerText="Descripción" >
+                         #{producto.proddescripcion}
+                    </p:column>
+                    <p:column headerText="Precio">
+                        #{producto.prodprecio}
+                    </p:column>
+                    <p:column  headerText="Categoria" >
+                        #{producto.idsubcategoria.subcatnombre}
+                    </p:column>
+                    
+                     <p:column headerText="Acciones">
+                         
+                    </p:column>
+                        
+               </p:dataTable>
+                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
+                
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

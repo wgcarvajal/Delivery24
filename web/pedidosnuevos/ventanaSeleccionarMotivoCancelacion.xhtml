@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition>
+        <p:dialog modal="true"  widgetVar="motivoCancelacion" closable="false" showHeader="true" header="Cancelar Pedido" resizable="false">
+            <h:form id="ventanaMotivoCancelacion"> 
+                <p:messages closable="true"/>
+                <p:panelGrid class="panelgrid">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel style="font-size: 15pt;" value="Motivo:"/>
+                        </p:column> 
+                        <p:column>
+                            <p:selectOneMenu  value="#{pedidoDetallesController.motivoCancelacionPedido}">
+                                <f:selectItem itemValue="s" itemLabel="Seleccione..."/>
+                                <f:selectItem itemValue="El cliente no contesto la llamada." itemLabel="El cliente no contesto la llamada"/>
+                                <f:selectItem itemValue="Datos del pedido poco confiables." itemLabel="Datos del pedido poco confiables"/>
+                                <f:selectItem itemValue="El cliente Cancelo el pedido." itemLabel="El cliente Cancelo el pedido"/>
+                            </p:selectOneMenu>
+                        </p:column> 
+                    </p:row>
+                     <p:row>
+                         <p:column colspan="2"  style="text-align: center">
+                             <p:commandButton value="Aceptar"
+                                              actionListener="#{pedidoDetallesController.aceptarCancelarPedido()}" 
+                                              onstart="PF('efectoCarga').show()"  onsuccess="PF('efectoCarga').hide()"/>
+                             <p:commandButton value="Cancelar" style="margin-left: 20px;"
+                                              actionListener="#{pedidoDetallesController.cancelarCancelarPedido()}" 
+                                             />
+                        </p:column>                      
+                    </p:row>
+                </p:panelGrid>
+            </h:form>       
+        </p:dialog>
+    </ui:composition>
+    
+</html>
