@@ -32,8 +32,42 @@ public class SubcategoriaFacade extends AbstractFacade<Subcategoria> {
     }
     
     public List<Subcategoria> findAllSubcategoriaOrderByPosicion() {
-        Query query = getEntityManager().createNamedQuery("Subcategoria.findAllOrderByPosicion");        
+        Query query = getEntityManager().createNamedQuery("Subcategoria.findAllOrderByPosicion"); 
+        query.setHint("eclipselink.refresh", true);
         List<Subcategoria> resultList = query.getResultList();
         return resultList;
     }
+    
+    public List<Subcategoria> findAllOderByNombre(){
+        Query query = getEntityManager().createNamedQuery("Subcategoria.findAllOderByNombre");
+        query.setHint("eclipselink.refresh", true);
+        List<Subcategoria> resuList = query.getResultList();
+        return resuList;
+    }
+    
+     public boolean existCategoria(String subcatnombre)
+    {
+        Query query = getEntityManager().createNamedQuery("Subcategoria.findBySubcatnombre");
+        query.setParameter("subcatnombre",  subcatnombre);
+        query.setHint("eclipselink.refresh", true);
+        List<Subcategoria> resultList = query.getResultList();
+        return resultList!=null && resultList.size()>0;
+    }
+     
+    public List<Subcategoria> findByColumn(String subcatnombre)
+    {
+        Query query = getEntityManager().createNamedQuery("Subcategoria.findByColumn");
+        query.setParameter("subcatnombre", "%" + subcatnombre + "%");
+        List<Subcategoria> resultList = query.getResultList();
+        return resultList;
+    }
+    
+    public boolean isCategoryUsed(int idsubcategoria)
+    {
+        Query query = getEntityManager().createNamedQuery("Producto.findBySubCatId");
+        query.setParameter("idsubcategoria",  idsubcategoria);
+        List<Subcategoria> resultList = query.getResultList();
+        return resultList!=null && resultList.size()>0;
+    }
+     
 }

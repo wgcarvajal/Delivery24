@@ -8,36 +8,10 @@
 
     <body>
 
-        <ui:composition template="/plantillas/frontEnd.xhtml">
-
-            <ui:define name="itemsMenu">
-                <h:link outcome="/faces/pedidosnuevos/pedidosnuevos" style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenu">
-                        Nuevos Pedidos
-                    </div>
-                </h:link>
-                <h:link outcome="/faces/pedidosconfirmados/pedidosconfirmados"  style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenuSeleccinado">
-                        Pedidos Confirmados
-                    </div>
-                </h:link>
-
-                <h:link outcome="/faces/pedidosdespachados/pedidosdespachados" style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenu">
-                        Pedidos Despachados
-                    </div>
-                </h:link>
-
-                <h:link outcome="/faces/pedidoscancelados/pedidoscancelados" style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenu">
-                        Pedidos Cancelados
-                    </div>
-                </h:link>
-            </ui:define>
+        <ui:composition template="/plantillas/pedidoTemplate.xhtml">
 
             <ui:define name="content">
                 <ui:include src="ventanaAgregarCantidadConfirmado.xhtml"/>
-                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
                 <ui:include src="ventanaEliminarItemConfirmado.xhtml"/>
                 <ui:include src="ventanaToastNoSePuedeEliminarItemConfirmado.xhtml"/>
                 <ui:include src="ventanaListaProductosConfirmados.xhtml"/>
@@ -45,8 +19,8 @@
                 <ui:include src="ventanaDespacharPedido.xhtml"/>
                 <h:form>
                     <p:breadCrumb>
-                        <p:menuitem value="pedidos confirmados" outcome="/faces/pedidosconfirmados/pedidosconfirmados" /> 
-                        <p:menuitem value="pedido confirmado" outcome="/faces/pedidosconfirmados/pedidoconfirmado" />  
+                        <p:menuitem value="pedidos confirmados" outcome="/pedidosconfirmados/pedidosconfirmados" /> 
+                        <p:menuitem value="pedido confirmado" outcome="/pedidosconfirmados/pedidoconfirmado" />  
                     </p:breadCrumb>                    
                 </h:form> 
                 <div id="tituloContenido">Pedido Confirmado</div>
@@ -221,19 +195,19 @@
                     <h:form>
                         <div id="botonImprimirRecibo">
                             <p:commandLink ajax="false" target="_blank" action="#{pedidoConfirmadoDetallesController.generarPdf()}" style="text-decoration: none">
-                                    <p:graphicImage style="width: 60px;" value="/faces/resources/imagenesAplicacion/generarRecibo.png"/>
+                                    <p:graphicImage style="width: 60px;" value="/resources/imagenesAplicacion/generarRecibo.png"/>
                                     Generar Recibo
                             </p:commandLink>
                          </div>
                         <div id="despacharPedido">
                             <p:commandLink style="text-decoration: none" actionListener="#{pedidoConfirmadoDetallesController.despacharPedido()}">
-                                <p:graphicImage style="width: 60px;" value="/faces/resources/imagenesAplicacion/domiciliario.png"/>
+                                <p:graphicImage style="width: 60px;" value="/resources/imagenesAplicacion/domiciliario.png"/>
                                 Despachar Pedido
                             </p:commandLink>
                         </div>                        
                         <div id="CancelarPedido">
                             <p:commandLink actionListener="#{pedidoConfirmadoDetallesController.cancelarPedido()}"  style="text-decoration: none">
-                                <p:graphicImage style="width: 60px;" value="/faces/resources/imagenesAplicacion/cancelar.png"/>
+                                <p:graphicImage style="width: 60px;" value="/resources/imagenesAplicacion/cancelar.png"/>
                                 Cancelar Pedido
                             </p:commandLink>
                         </div> 
@@ -244,12 +218,12 @@
                 <div id="tituloDetalles">Detalles Pedido</div>
                 <div id="cuadroItems">
                     <h:form id="tablaItemsPedido">
-                        <p:commandLink actionListener="#{listarProductosAgregar.listarProductos()}"><p:graphicImage style="margin-left:  20px;width: 60px;" value="/faces/resources/imagenesAplicacion/agregarProducto.jpg"></p:graphicImage></p:commandLink>
+                        <p:commandLink actionListener="#{listarProductosAgregar.listarProductos()}"><p:graphicImage style="margin-left:  20px;width: 60px;" value="/resources/imagenesAplicacion/agregarProducto.jpg"></p:graphicImage></p:commandLink>
                         <p:dataTable  style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;" value="#{pedidoConfirmadoDetallesController.itemsPedido}" var="itempedido" 
                                       >
 
                             <p:column headerText="Imagen">
-                                <p:graphicImage style="width: 70px;text-align: center; font-size: 12pt;" value="/faces/resources/imagenes/#{itempedido.idproducto.prodimagen}"/>
+                                <p:graphicImage style="width: 70px;text-align: center; font-size: 12pt;" value="/resources/imagenes/#{itempedido.idproducto.prodimagen}"/>
                             </p:column>
                             <p:column style="text-align: center; font-size: 12pt;" headerText="Nombre Producto">
                            #{itempedido.idproducto.prodnombrefactura}

@@ -9,9 +9,13 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>blitzer</param-value>
+    </context-param>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -19,17 +23,19 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/login.xhtml</welcome-file>
+        <welcome-file>login.xhtml</welcome-file>
     </welcome-file-list>
     <security-constraint>
         <display-name>administradores</display-name>
         <web-resource-collection>
             <web-resource-name>pedidos</web-resource-name>
             <description/>
-            <url-pattern>/faces/pedidosnuevos/*</url-pattern>
-            <url-pattern>/faces/pedidosconfirmados/*</url-pattern>
-            <url-pattern>/faces/pedidosdespachados/*</url-pattern>
-            <url-pattern>/faces/pedidoscancelados/*</url-pattern>
+            <url-pattern>/pedidosnuevos/*</url-pattern>
+            <url-pattern>/pedidosconfirmados/*</url-pattern>
+            <url-pattern>/pedidosdespachados/*</url-pattern>
+            <url-pattern>/pedidoscancelados/*</url-pattern>
+            <url-pattern>/admin/*</url-pattern>
+            <url-pattern>/productos/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>
@@ -48,4 +54,14 @@
         <description>administradores con todos los privilegios</description>
         <role-name>admin</role-name>
     </security-role>
+    
+    
+    <servlet>
+        <servlet-name>ProductoImageServlet</servlet-name>
+        <servlet-class>com.delivery24.servlet.ProductoImageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductoImageServlet</servlet-name>
+        <url-pattern>/image</url-pattern>
+    </servlet-mapping>
 </web-app>

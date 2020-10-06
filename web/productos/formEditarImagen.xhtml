@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+       
+                    <p:dialog resizable="false"   
+                              header="#{bundle.Image}" 
+                              position="center" 
+                              modal="true"  
+                              widgetVar="editarImagenDialog" >
+                        <h:form id="formEditarImagen">
+                            <p:messages closable="true"/>
+                            <p:panelGrid id="imagenPanel" style="text-align:left;" styleClass="panelgrid">
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <span style="position: relative"> La imagen que suba será redimensionada automáticamente</span>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:fileUpload  fileUploadListener="#{productoController.cargarImagen}" mode="advanced" 
+                                                       update="formEditarImagen:imagenPanel"
+                                                       auto ="true"
+                                                       label="Seleccione"
+                                                       fileLimit="1"
+                                                       onstart="PF('efectoCarga').show()"  oncomplete="PF('efectoCarga').hide()">
+                                            <f:passThroughAttribute name="accept" value="image/png"/>
+                                            <f:passThroughAttribute name="accept" value="image/JPEG"/>
+                                        </p:fileUpload>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="#{productoController.uploadedFileImagen.fileName}"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </h:form>
+                        <h:form>
+                            <p:panelGrid id="imagenPanel" style="text-align:left;" styleClass="panelgrid">
+                                <p:row>
+                                    <p:column>
+                                        <p:commandButton value="#{bundle.Ok}"
+                                                         action="#{productoController.editarImagen}"
+                                                         onstart="PF('efectoCarga').show()"  
+                                                         onsuccess="PF('efectoCarga').hide()"
+                                                         update=":formEditarImagen :formProducto"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </h:form>
+                    </p:dialog>
+    </ui:composition>
+</html>
+

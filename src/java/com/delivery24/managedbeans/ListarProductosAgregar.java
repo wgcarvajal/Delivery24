@@ -7,13 +7,12 @@ package com.delivery24.managedbeans;
 
 import com.delivery24.entities.Producto;
 import com.delivery24.facade.ProductoFacade;
+import com.delivery24.managedbeans.util.Util;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-import org.primefaces.context.RequestContext;
-
 /**
  *
  * @author geovanny
@@ -54,9 +53,8 @@ public class ListarProductosAgregar  implements Serializable
     {
         productos = ejbProductoFacade.findAllProductoOrderBySubCategoria();
         nombreProducto = "";
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.update("ventanaListaProductos");
-        requestContext.execute("PF('listaProductos').show()"); 
+        Util.update("ventanaListaProductos");
+        Util.openDialog("listaProductos"); 
     }
     
     public void buscarPorNombreProducto()

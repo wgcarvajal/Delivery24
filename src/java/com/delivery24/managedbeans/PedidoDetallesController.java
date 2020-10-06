@@ -12,6 +12,7 @@ import com.delivery24.entities.Producto;
 import com.delivery24.facade.FormapagoFacade;
 import com.delivery24.facade.ItempedidoFacade;
 import com.delivery24.facade.PedidoFacade;
+import com.delivery24.managedbeans.util.Util;
 import com.delivery24.networking.HttpConnection;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Rectangle;
@@ -34,7 +35,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -269,8 +269,7 @@ public class PedidoDetallesController implements Serializable
     public void cancelarEditarDatosPedido()
     {
         inicializar();
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.update("formularioDatosPedido");
+        Util.update("formularioDatosPedido");
     }
     
     public void aceptarEditarDatosPedido()
@@ -285,9 +284,8 @@ public class PedidoDetallesController implements Serializable
             pedidoSelected.setFormapago(this.formapago);
             ejbPedidoFacade.edit(pedidoSelected);
             inicializar();
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.update("formularioDatosPedido");  
-            requestContext.update("formularioTotalPedido");
+            Util.update("formularioDatosPedido");  
+            Util.update("formularioTotalPedido");
         }
         
     }
@@ -442,18 +440,16 @@ public class PedidoDetallesController implements Serializable
     {
         this.itemEditarCantidad = item;
         this.cantidad = item.getCantidad()+"";
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.update("formularioCantidad");
-        requestContext.execute("PF('agregarCantidad').show()");       
+        Util.update("formularioCantidad");
+        Util.openDialog("agregarCantidad");       
         
     }
     
     public void cancelarEditarCantidad()
     {
         this.itemEditarCantidad = null;
-        this.cantidad = "";
-        RequestContext requestContext = RequestContext.getCurrentInstance();        
-        requestContext.execute("PF('agregarCantidad').hide()");
+        this.cantidad = "";        
+        Util.closeDialog("agregarCantidad");
     }
     
      public void aceptarEditarCantidad()
@@ -464,10 +460,9 @@ public class PedidoDetallesController implements Serializable
             ejbItempedidoFacade.edit(this.itemEditarCantidad);
             this.itemEditarCantidad = null;
             this.cantidad = "";
-            RequestContext requestContext = RequestContext.getCurrentInstance(); 
-            requestContext.update("tablaItemsPedido");
-            requestContext.update("formularioTotalPedido");
-            requestContext.execute("PF('agregarCantidad').hide()");
+            Util.update("tablaItemsPedido");
+            Util.update("formularioTotalPedido");
+            Util.closeDialog("agregarCantidad");
         }
         
         
@@ -504,38 +499,33 @@ public class PedidoDetallesController implements Serializable
         if(itemsPedido.size()>1)
         {
             this.itemEliminar = item;
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("PF('eliminarItem').show()"); 
+            Util.openDialog("eliminarItem");
         }
         else
         {
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.execute("PF('toasNoEliminarItem').show()");           
+            Util.openDialog("toasNoEliminarItem");           
         }
         
     }
     
     public void aceptarMensajeToasNoEliminarProducto()
     {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('toasNoEliminarItem').hide()"); 
+        Util.closeDialog("toasNoEliminarItem");
     }
     
     public void aceptarEliminarItem()
     {
         ejbItempedidoFacade.remove(itemEliminar);
         this.itemsPedido.remove(this.itemEliminar);
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('eliminarItem').hide()"); 
-        requestContext.update("tablaItemsPedido");
-        requestContext.update("formularioTotalPedido");
+        Util.closeDialog("eliminarItem");
+        Util.update("tablaItemsPedido");
+        Util.update("formularioTotalPedido");
     }
     
     public void cancelarEliminarItem()
     {
         this.itemEliminar = null;
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('eliminarItem').hide()"); 
+        Util.closeDialog("eliminarItem");
     }
     
     public void agregarProducto(Producto producto)
@@ -559,9 +549,8 @@ public class PedidoDetallesController implements Serializable
             i.setPrecio(producto.getProdprecio());
             ejbItempedidoFacade.create(i);
             itemsPedido.add(i);
-            RequestContext requestContext = RequestContext.getCurrentInstance();
-            requestContext.update("tablaItemsPedido");
-            requestContext.update("formularioTotalPedido");
+            Util.update("tablaItemsPedido");
+            Util.update("formularioTotalPedido");
             fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Producto agregado al pedido", "Producto agregado al pedido"));
         }
         else
@@ -573,9 +562,8 @@ public class PedidoDetallesController implements Serializable
     
     public void cancelarPedido()
     { 
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.update("ventanaMotivoCancelacion");
-        requestContext.execute("PF('motivoCancelacion').show()");        
+        Util.update("ventanaMotivoCancelacion");
+        Util.openDialog("motivoCancelacion");        
     }
 
     public void aceptarCancelarPedido()throws IOException
@@ -599,8 +587,7 @@ public class PedidoDetallesController implements Serializable
         else
         {
            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Debe Seleccionar un movito por el cual se cancela.", "Debe Seleccionar un movito por el cual se cancela."));
-           RequestContext requestContext = RequestContext.getCurrentInstance();
-           requestContext.update("ventanaMotivoCancelacion"); 
+           Util.update("ventanaMotivoCancelacion"); 
         }
         
     }
@@ -608,8 +595,7 @@ public class PedidoDetallesController implements Serializable
     public void cancelarCancelarPedido()
     {
         motivoCancelacionPedido = "";
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('motivoCancelacion').hide()");
+        Util.closeDialog("motivoCancelacion");
     }
     
     public void generarPdf()
@@ -731,8 +717,7 @@ public class PedidoDetallesController implements Serializable
     
     public void confirmarPedido()
     {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('confirmarPedido').show()"); 
+        Util.openDialog("confirmarPedido"); 
     }
     
     public void aceptarConfirmarPedido() throws IOException
@@ -755,8 +740,7 @@ public class PedidoDetallesController implements Serializable
     
     public void cancelarConfirmarPedido()
     {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('confirmarPedido').hide()");
+        Util.closeDialog("confirmarPedido");
     }
     
 }

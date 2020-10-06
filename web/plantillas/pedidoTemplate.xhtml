@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./frontEnd.xhtml">
+
+            <ui:define name="itemsMenu">
+                <h:link outcome="/pedidosnuevos/pedidosnuevos" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Nuevos Pedidos
+                    </div>
+                </h:link>
+                <h:link outcome="/pedidosconfirmados/pedidosconfirmados" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Pedidos Confirmados
+                    </div>
+                </h:link>
+                
+                <h:link outcome="/pedidosdespachados/pedidosdespachados" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Pedidos Despachados
+                    </div>
+                </h:link>
+                
+                <h:link  outcome="/pedidoscancelados/pedidoscancelados" style="text-decoration: none; color: #000000;">
+                   <div class="itemsMenu">
+                        Pedidos Cancelados
+                    </div>
+                </h:link>
+            </ui:define>
+
+            <ui:define name="content">
+                <ui:insert name="content">content</ui:insert>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

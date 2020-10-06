@@ -32,9 +32,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Subcategoria.findAll", query = "SELECT s FROM Subcategoria s"),
+    @NamedQuery(name = "Subcategoria.findAllOderByNombre", query = "SELECT s FROM Subcategoria s ORDER BY s.subcatnombre"),
     @NamedQuery(name = "Subcategoria.findAllOrderByPosicion", query = "SELECT s FROM Subcategoria s  ORDER BY s.subcatposicion"),
     @NamedQuery(name = "Subcategoria.findById", query = "SELECT s FROM Subcategoria s WHERE s.id = :id"),
     @NamedQuery(name = "Subcategoria.findBySubcatnombre", query = "SELECT s FROM Subcategoria s WHERE s.subcatnombre = :subcatnombre"),
+    @NamedQuery(name = "Subcategoria.findByColumn", query = "SELECT s FROM Subcategoria s WHERE LOWER(s.subcatnombre) LIKE :subcatnombre Order by s.subcatnombre asc"),
     @NamedQuery(name = "Subcategoria.findBySubcatipo", query = "SELECT s FROM Subcategoria s WHERE s.subcatipo = :subcatipo"),
     @NamedQuery(name = "Subcategoria.findBySubcatposicion", query = "SELECT s FROM Subcategoria s WHERE s.subcatposicion = :subcatposicion")})
 public class Subcategoria implements Serializable {

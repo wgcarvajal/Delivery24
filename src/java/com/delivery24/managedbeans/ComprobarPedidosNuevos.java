@@ -7,13 +7,13 @@ package com.delivery24.managedbeans;
 
 import com.delivery24.entities.Pedido;
 import com.delivery24.facade.PedidoFacade;
+import com.delivery24.managedbeans.util.Util;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
-import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -57,22 +57,19 @@ public class ComprobarPedidosNuevos implements Serializable {
 
         if(banderaNuevos==0)
         {
-            RequestContext context = RequestContext.getCurrentInstance();    
-            context.addCallbackParam("respuesta", false);
+            Util.addCallbackParam("respuesta", false);
         }
         else
-        {
-            RequestContext context = RequestContext.getCurrentInstance();    
-            context.addCallbackParam("respuesta", true);
-            context.execute("PF('nuevospedidos').show()");
+        { 
+            Util.addCallbackParam("respuesta", true);
+            Util.openDialog("nuevospedidos");
         }
     }
     
     public void aceptarNuevosPedidos()
     {
-        RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("PF('nuevospedidos').hide()"); 
-        context.addCallbackParam("respuesta", true);      
+        Util.closeDialog("nuevospedidos");
+        Util.addCallbackParam("respuesta", true);      
         
     }
     

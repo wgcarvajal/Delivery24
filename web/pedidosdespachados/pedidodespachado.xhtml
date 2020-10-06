@@ -8,39 +8,13 @@
 
     <body>
 
-        <ui:composition template="/plantillas/frontEnd.xhtml">
+        <ui:composition template="/plantillas/pedidoTemplate.xhtml">
 
-            <ui:define name="itemsMenu">
-                <h:link outcome="/faces/pedidosnuevos/pedidosnuevos" style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenu">
-                        Nuevos Pedidos
-                    </div>
-                </h:link>
-                <h:link outcome="/faces/pedidosconfirmados/pedidosconfirmados"  style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenu">
-                        Pedidos Confirmados
-                    </div>
-                </h:link>
-
-                <h:link outcome="/faces/pedidosdespachados/pedidosdespachados"  style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenuSeleccinado">
-                        Pedidos Despachados
-                    </div>
-                </h:link>
-
-                <h:link  outcome="/faces/pedidoscancelados/pedidoscancelados" style="text-decoration: none; color: #000000;">
-                    <div class="itemsMenu">
-                        Pedidos Cancelados
-                    </div>
-                </h:link>
-            </ui:define>
-
-            <ui:define name="content">     
-                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
+            <ui:define name="content">
                 <h:form>
                     <p:breadCrumb>
-                        <p:menuitem value="pedidos Despachado" outcome="/faces/pedidosdespachados/pedidosdespachados" /> 
-                        <p:menuitem value="pedido Despachado" outcome="/faces/pedidosdespachados/pedidodespachado" />  
+                        <p:menuitem value="pedidos Despachado" outcome="/pedidosdespachados/pedidosdespachados" /> 
+                        <p:menuitem value="pedido Despachado" outcome="/pedidosdespachados/pedidodespachado" />  
                     </p:breadCrumb>                    
                 </h:form> 
                 <div id="tituloContenido">Pedido Despachado</div>
@@ -128,7 +102,7 @@
                     <h:form>
                         <div id="botonImprimirRecibo">
                             <p:commandLink ajax="false" target="_blank" action="#{pedidoDespachadoDetallesController.generarPdf()}" style="text-decoration: none">
-                                    <p:graphicImage style="width: 60px;" value="/faces/resources/imagenesAplicacion/generarRecibo.png"/>
+                                    <p:graphicImage style="width: 60px;" value="/resources/imagenesAplicacion/generarRecibo.png"/>
                                     Generar Recibo
                             </p:commandLink>
                          </div>                        
@@ -143,7 +117,7 @@
                                       >
 
                             <p:column headerText="Imagen">
-                                <p:graphicImage style="width: 70px;text-align: center; font-size: 12pt;" value="/faces/resources/imagenes/#{itempedido.idproducto.prodimagen}"/>
+                                <p:graphicImage style="width: 70px;text-align: center; font-size: 12pt;" value="/resources/imagenes/#{itempedido.idproducto.prodimagen}"/>
                             </p:column>
                             <p:column style="text-align: center; font-size: 12pt;" headerText="Nombre Producto">
                            #{itempedido.idproducto.prodnombrefactura}

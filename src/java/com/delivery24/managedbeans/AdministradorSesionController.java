@@ -6,6 +6,7 @@
 package com.delivery24.managedbeans;
 
 import com.delivery24.facade.AdministradorgrupoFacade;
+import com.delivery24.managedbeans.util.Util;
 import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -15,7 +16,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -70,7 +70,6 @@ public class AdministradorSesionController implements Serializable {
        
     public void login()throws IOException, ServletException 
     {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
         FacesContext fc = FacesContext.getCurrentInstance();
         HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();        
         if (req.getUserPrincipal() == null) {
@@ -80,19 +79,19 @@ public class AdministradorSesionController implements Serializable {
                 req.getServletContext().log("Autenticacion exitosa");
                 haySesion = true;
                 
-                FacesContext.getCurrentInstance().getExternalContext().redirect("faces/pedidosnuevos/pedidosnuevos.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("pedidosnuevos/pedidosnuevos.xhtml");
                 
             } 
             catch (ServletException e) 
             {
                 fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de usuario o contraseña incorrectos", "Nombre de usuario o contraseña incorrectos"));
-                requestContext.update("formularioInicioSession");                
+                Util.update("formularioInicioSession");               
             }
         } 
         else 
         {
             req.getServletContext().log("El usuario ya estaba logueado:  ");
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/delivery24/faces/pedidosnuevos/pedidosnuevos.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/Delivery24/pedidosnuevos/pedidosnuevos.xhtml");
         }
     }
     
@@ -104,7 +103,7 @@ public class AdministradorSesionController implements Serializable {
             req.logout();            
             req.getSession().invalidate();
             fc.getExternalContext().invalidateSession();
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/delivery24");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/Delivery24/");
 
         } catch (ServletException e) {            
             fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "FAILED", "Logout failed on backend"));            

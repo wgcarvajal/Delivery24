@@ -1,235 +1,246 @@
 package com.delivery24.managedbeans;
 
-import com.delivery24.entities.Producto;
-import com.delivery24.managedbeans.util.JsfUtil;
-import com.delivery24.managedbeans.util.PaginationHelper;
-import com.delivery24.facade.ProductoFacade;
 
+import com.delivery24.entities.Producto;
+import com.delivery24.entities.Subcategoria;
+import com.delivery24.facade.ProductoFacade;
+import com.delivery24.facade.SubcategoriaFacade;
+import com.delivery24.managedbeans.util.Util;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIComponent;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
-import javax.faces.model.SelectItem;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 @Named("productoController")
-@SessionScoped
+@ViewScoped
 public class ProductoController implements Serializable {
 
-    private Producto current;
-    private DataModel items = null;
     @EJB
-    private com.delivery24.facade.ProductoFacade ejbFacade;
-    private PaginationHelper pagination;
-    private int selectedItemIndex;
-
-    public ProductoController() {
-    }
-
-    public Producto getSelected() {
-        if (current == null) {
-            current = new Producto();
-            selectedItemIndex = -1;
-        }
-        return current;
-    }
-
-    private ProductoFacade getFacade() {
-        return ejbFacade;
-    }
-
-    public PaginationHelper getPagination() {
-        if (pagination == null) {
-            pagination = new PaginationHelper(10) {
-
-                @Override
-                public int getItemsCount() {
-                    return getFacade().count();
+    private ProductoFacade productoEJB;
+    @EJB
+    private SubcategoriaFacade subcategoriaEJB;
+    private Producto producto;
+    private String nombre;
+    private UploadedFile uploadedFileImagen;
+    private Subcategoria subcategoria;
+    private List<Subcategoria> subcategorias;
+    
+    @PostConstruct
+    public void init()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map<String, String> paramMap = context.getExternalContext().getRequestParameterMap();
+        String prodId = paramMap.get("p");
+        
+        if (prodId != null && !prodId.equals("")) {
+            try {
+                int id = Integer.parseInt(prodId);
+                producto = productoEJB.find(id);
+                if (producto == null) {
+                    goProducts();
                 }
-
-                @Override
-                public DataModel createPageDataModel() {
-                    return new ListDataModel(getFacade().findRange(new int[]{getPageFirstItem(), getPageFirstItem() + getPageSize()}));
+                else
+                {
+                    initValues();
                 }
-            };
-        }
-        return pagination;
-    }
-
-    public String prepareList() {
-        recreateModel();
-        return "List";
-    }
-
-    public String prepareView() {
-        current = (Producto) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "View";
-    }
-
-    public String prepareCreate() {
-        current = new Producto();
-        selectedItemIndex = -1;
-        return "Create";
-    }
-
-    public String create() {
-        try {
-            getFacade().create(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ProductoCreated"));
-            return prepareCreate();
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String prepareEdit() {
-        current = (Producto) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        return "Edit";
-    }
-
-    public String update() {
-        try {
-            getFacade().edit(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ProductoUpdated"));
-            return "View";
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            return null;
-        }
-    }
-
-    public String destroy() {
-        current = (Producto) getItems().getRowData();
-        selectedItemIndex = pagination.getPageFirstItem() + getItems().getRowIndex();
-        performDestroy();
-        recreatePagination();
-        recreateModel();
-        return "List";
-    }
-
-    public String destroyAndView() {
-        performDestroy();
-        recreateModel();
-        updateCurrentItem();
-        if (selectedItemIndex >= 0) {
-            return "View";
+            } catch (NumberFormatException e) {
+                goProducts();
+            }
         } else {
-            // all items were removed - go back to list
-            recreateModel();
-            return "List";
+            goProducts();
         }
     }
-
-    private void performDestroy() {
+    
+    public void initValues()
+    {
+    }
+    
+    private void goProducts() {
         try {
-            getFacade().remove(current);
-            JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("ProductoDeleted"));
-        } catch (Exception e) {
-            JsfUtil.addErrorMessage(e, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
+            String uri = Util.projectPath+"/productos/productos.xhtml?i=1";
+            FacesContext.getCurrentInstance().getExternalContext().redirect(uri);
+        } catch (IOException ex) {
+            Logger.getLogger(ProductoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void updateCurrentItem() {
-        int count = getFacade().count();
-        if (selectedItemIndex >= count) {
-            // selected index cannot be bigger than number of items:
-            selectedItemIndex = count - 1;
-            // go to previous page if last page disappeared:
-            if (pagination.getPageFirstItem() >= count) {
-                pagination.previousPage();
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Subcategoria getSubcategoria() {
+        return subcategoria;
+    }
+
+    public void setSubcategoria(Subcategoria subcategoria) {
+        this.subcategoria = subcategoria;
+    }
+
+    public UploadedFile getUploadedFileImagen() {
+        return uploadedFileImagen;
+    }
+
+    public List<Subcategoria> getSubcategorias() {
+        return subcategorias;
+    }
+    
+    public void abrirEditarNombre()
+    {
+        nombre = producto.getProdnombre();
+        Util.update(":formEditarNombre:nombrePanel");
+        Util.openDialog("editarNombreDialog");
+    }
+    
+    public void editarNombre()
+    {
+        if(!Util.formatText(nombre).equals(producto.getProdnombre()))
+        {
+            producto.setProdnombre(Util.formatText(nombre));
+            productoEJB.edit(producto);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+            Util.update(":formProducto:messageGrowl");
+            Util.update(":formProducto:panelProducto");
+        }
+        Util.closeDialog("editarNombreDialog");
+    }
+    
+    
+    public void abrirEditarImagen()
+    {
+        uploadedFileImagen = null;
+        Util.update(":formEditarImagen:imagenPanel");
+        Util.openDialog("editarImagenDialog");
+    }
+    
+    public void editarImagen() throws InterruptedException
+    {
+        if (this.uploadedFileImagen != null) {
+                
+            try {
+                File directory = new File(Util.PRODUCTIMAGEDIR+producto.getId());
+                
+                if(!directory.exists())
+                {
+                    directory.mkdir();
+                }
+                InputStream fi = uploadedFileImagen.getInputstream();
+                
+                byte[] buffer = new byte[fi.available()];
+                fi.read(buffer);
+                
+                String imagenActual = producto.getProdimagen();
+                
+                
+                
+                ByteArrayInputStream bin = new ByteArrayInputStream(buffer);
+                
+                String name = uploadedFileImagen.getFileName();
+                String []split = name.split(Pattern.quote("."));
+                String extension=split[split.length-1];
+                
+                String fileName; 
+                
+                if(imagenActual.equals("default.png"))
+                {
+                   fileName= producto.getId()+File.separator+"1."+extension; 
+                }
+                else
+                {
+                    String [] n = imagenActual.split(File.separator);
+                    imagenActual = n[1];
+                    n = imagenActual.split(Pattern.quote("."));
+                    int indice = Integer.parseInt(n[0]);
+                    indice = indice +1;
+                    fileName= producto.getId()+File.separator+indice+"."+extension;
+                    File currentFile = new File(Util.PRODUCTIMAGEDIR+producto.getProdimagen());
+                    if(currentFile.exists())
+                    {
+                        currentFile.delete();
+                    }
+                }
+                
+                File file = new File(Util.PRODUCTIMAGEDIR+fileName);
+                file.createNewFile();
+                FileOutputStream fbo= new FileOutputStream(file);
+                byte[] bff = new byte[1024];
+                int length;
+                while((length=bin.read(bff))>0)
+                {
+                    fbo.write(bff, 0, length);
+                }
+                fbo.close();
+                fi.close();
+                bin.close();
+                
+                producto.setProdimagen(fileName);
+                productoEJB.edit(producto);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Foto Actualizada exitosamente. Fresione F5 para refrescarla", "Foto Actualizada."));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            Thread.sleep(2000);
+            this.uploadedFileImagen = null;
+
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se ha cargado una foto.", "No se ha cargado una foto"));
         }
-        if (selectedItemIndex >= 0) {
-            current = getFacade().findRange(new int[]{selectedItemIndex, selectedItemIndex + 1}).get(0);
+    }
+    
+    public void cargarImagen(FileUploadEvent event) {
+        this.uploadedFileImagen = event.getFile();
+    }
+    
+    
+    public void abrirEditarCategoria()
+    {
+        subcategoria = producto.getIdsubcategoria();
+        subcategorias = subcategoriaEJB.findAllOderByNombre();
+        Util.update(":formEditarCategoria:categoriaPanel");
+        Util.openDialog("editarCategoriaDialog");
+    }
+    
+    public void editarCategoria()
+    {
+        if(!subcategoria.getId().equals(producto.getIdsubcategoria().getId()))
+        {
+            producto.setIdsubcategoria(subcategoria);
+            productoEJB.edit(producto);
+            Util.addInfoMessage(ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"),ResourceBundle.
+                    getBundle("/Bundle").
+                    getString("EditSuccessfull"));
+            Util.update(":formProducto:messageGrowl");
+            Util.update(":formProducto:panelProducto");
         }
+        Util.closeDialog("editarCategoriaDialog");
     }
-
-    public DataModel getItems() {
-        if (items == null) {
-            items = getPagination().createPageDataModel();
-        }
-        return items;
-    }
-
-    private void recreateModel() {
-        items = null;
-    }
-
-    private void recreatePagination() {
-        pagination = null;
-    }
-
-    public String next() {
-        getPagination().nextPage();
-        recreateModel();
-        return "List";
-    }
-
-    public String previous() {
-        getPagination().previousPage();
-        recreateModel();
-        return "List";
-    }
-
-    public SelectItem[] getItemsAvailableSelectMany() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), false);
-    }
-
-    public SelectItem[] getItemsAvailableSelectOne() {
-        return JsfUtil.getSelectItems(ejbFacade.findAll(), true);
-    }
-
-    public Producto getProducto(java.lang.Integer id) {
-        return ejbFacade.find(id);
-    }
-
-    @FacesConverter(forClass = Producto.class)
-    public static class ProductoControllerConverter implements Converter {
-
-        @Override
-        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-            if (value == null || value.length() == 0) {
-                return null;
-            }
-            ProductoController controller = (ProductoController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "productoController");
-            return controller.getProducto(getKey(value));
-        }
-
-        java.lang.Integer getKey(String value) {
-            java.lang.Integer key;
-            key = Integer.valueOf(value);
-            return key;
-        }
-
-        String getStringKey(java.lang.Integer value) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value);
-            return sb.toString();
-        }
-
-        @Override
-        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof Producto) {
-                Producto o = (Producto) object;
-                return getStringKey(o.getId());
-            } else {
-                throw new IllegalArgumentException("object " + object + " is of type " + object.getClass().getName() + "; expected type: " + Producto.class.getName());
-            }
-        }
-
-    }
-
 }

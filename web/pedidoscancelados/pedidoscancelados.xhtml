@@ -7,39 +7,12 @@
 
     <body>
 
-        <ui:composition template="/plantillas/frontEnd.xhtml">
+        <ui:composition template="/plantillas/pedidoTemplate.xhtml">
             
-            <ui:define name="itemsMenu">                
-                    
-                <h:link outcome="/faces/pedidosnuevos/pedidosnuevos" style="text-decoration: none; color: #000000;">
-                   <div class="itemsMenu">
-                        Nuevos Pedidos
-                    </div>
-                </h:link>
-                <h:link outcome="/faces/pedidosconfirmados/pedidosconfirmados" style="text-decoration: none; color: #000000;">
-                   <div class="itemsMenu">
-                        Pedidos Confirmados
-                    </div>
-                </h:link>
-                
-                <h:link outcome="/faces/pedidosdespachados/pedidosdespachados"  style="text-decoration: none; color: #000000;">
-                   <div class="itemsMenu">
-                        Pedidos Despachados
-                    </div>
-                </h:link>
-                
-                <h:link outcome="/faces/pedidoscancelados/pedidoscancelados"  style="text-decoration: none; color: #000000;">
-                   <div class="itemsMenuSeleccinado">
-                        Pedidos Cancelados
-                    </div>
-                </h:link>
-                
-            </ui:define>
-
             <ui:define name="content">
                 <h:form>
                     <p:breadCrumb>
-                        <p:menuitem value="pedidos cancelados" outcome="/faces/pedidoscancelados/pedidoscancelados" />                           
+                        <p:menuitem value="pedidos cancelados" outcome="/pedidoscancelados/pedidoscancelados" />                           
                     </p:breadCrumb>
                 </h:form> 
                 <div id="tituloContenido">Pedidos Cancelados</div>
@@ -66,11 +39,10 @@
                     </p:column>
                     
                      <p:column headerText="Acciones">
-                         <p:commandLink action="#{pedidoCanceladoDetallesController.seleccionarPedido(pedido)}"> <p:graphicImage style="width: 30px;" value="/faces/resources/imagenesAplicacion/lupa.png"/></p:commandLink>
+                         <p:commandLink action="#{pedidoCanceladoDetallesController.seleccionarPedido(pedido)}"> <p:graphicImage style="width: 30px;" value="/resources/imagenesAplicacion/lupa.png"/></p:commandLink>
                     </p:column>
                         
                </p:dataTable>
-                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
             </ui:define>
             
 

@@ -3,57 +3,73 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
-        <ui:composition template="/plantillas/frontEnd.xhtml">
-
-            <ui:define name="itemsMenu">
-                 <h:link outcome="/faces/productos/productos" style="text-decoration: none; color: #000000;">
-                   <div class="itemsMenuSeleccinado">
-                        Lista de  productos
-                    </div>
-                </h:link>
-            </ui:define>
+        <ui:composition template="/plantillas/productoTemplate.xhtml">
 
             <ui:define name="content">
                 <h:form>
                     <p:breadCrumb>
-                        <p:menuitem value="Lista de productos" outcome="/faces/productos/productos" />                           
+                        <p:menuitem value="Lista de productos" outcome="/productos/productos" />                           
                     </p:breadCrumb>
                 </h:form> 
                 <div id="tituloContenido">Lista de Productos</div>
                 
-                <p:dataTable style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;" value="#{productosController.productos}" var="producto" 
-                             paginator="true"
-                             rows="10"
-                             >
-                        
-                    <p:column headerText="Imagen">
-                        <p:graphicImage style="width: 60px;" value="/faces/resources/imagenes/#{producto.prodimagen}"/>
-                    </p:column>
-                    <p:column headerText="Nombre">
+                <h:form>
+
+                    <p:commandButton style="margin-left: 20px;margin-bottom: 20px;"
+                                     value="Registrar"
+                                     action="#{productosController.irRegistrarProducto}"
+                                     >
+
+                    </p:commandButton>
+
+                    <p:dataTable widgetVar="tablaProductos" style="margin-right: 20px;margin-left: 20px;margin-bottom: 20px;" 
+                                 value="#{productosController.productos}" var="producto" 
+                                 paginator="true"
+                                 rows="20"
+                                 >
+
+                        <p:column headerText="Imagen" style="text-align: center;">
+                            <p:graphicImage style="width: 60px;" value="/image?image=#{producto.prodimagen}"/>
+                        </p:column>
+                        <p:column filterBy="#{producto.prodnombre}" style="text-align: center;" headerText="Nombre">
                           #{producto.prodnombre}
-                    </p:column>
-                    <p:column headerText="Descripción" >
+                        </p:column>
+                        <p:column  style="text-align: center;" headerText="Descripción" >
                          #{producto.proddescripcion}
-                    </p:column>
-                    <p:column headerText="Precio">
+                        </p:column>
+                        <p:column  style="text-align: center;" headerText="Precio">
                         #{producto.prodprecio}
-                    </p:column>
-                    <p:column  headerText="Categoria" >
-                        #{producto.idsubcategoria.subcatnombre}
-                    </p:column>
-                    
-                     <p:column headerText="Acciones">
-                         
-                    </p:column>
-                        
-               </p:dataTable>
-                <ui:include src="/ventanaEfectodeCarga.xhtml"/>
-                
-                
+                        </p:column>
+                        <p:column filterBy="#{producto.idsubcategoria.subcatnombre}" 
+                                  style="text-align: center;" 
+                                  headerText="Categoria" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu 
+                                    onchange="PF('tablaProductos').filter()"
+                                    styleClass="custom-filter">
+                                    <f:selectItem itemLabel="#{bundle.Select}" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems var="subcategoria" value="#{productosController.subcategorias}" 
+                                                   itemLabel="#{subcategoria.subcatnombre}" itemValue="#{subcategoria.subcatnombre}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            #{producto.idsubcategoria.subcatnombre}
+                        </p:column>
+                        <p:column  style="text-align: center;" headerText="Estado" >
+                            #{productosController.estado(producto.activo)}
+                        </p:column>
+                        <p:column style="text-align: center;" headerText="Acciones">
+                            <p:commandLink action="#{productosController.goProducto(producto.id)}">
+                                <i class="fa fa-fw fa-edit"></i>
+                            </p:commandLink>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
             </ui:define>
 
         </ui:composition>
